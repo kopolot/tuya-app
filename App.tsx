@@ -1,118 +1,51 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useState} from 'react';
+import RenderHTML from 'react-native-render-html';
+import { ColorSchemeName, useWindowDimensions } from 'react-native';
 import {
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
+import TestComponent from './components/Test';
+import LoginComponent from './components/LoginComponent'
+import UserModule , {User} from "./ts/userModule"
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+type AppStateI={
+  currentUsedComponent:React.ReactElement<any,any>|null
+  user:User,
+  theme:ColorSchemeName
 }
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+const App:React.FC=()=>{
+  var AppState:AppStateI={
+    currentUsedComponent: UserModule.hasSession()?TestComponent({}):LoginComponent(),
+    user:UserModule,
+    theme:useColorScheme()
+  }
+  const isDark=AppState.theme==="dark"
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
+    <SafeAreaView style={{width:"100%",height:"100%"}}>
+      <ScrollView style={[isDark?styles.darkTheme:styles.lightTheme,styles.mainCont]}>
+          {AppState.currentUsedComponent}
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  darkTheme:{
+    backgroundColor:"#000",
+    color:"#fff"
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  lightTheme:{
+    backgroundColor:"#fff",
+    color:"#000"    
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  mainCont:{
+    width:"100%",
+    minHeight:"100%"
+  }
 });
 
 export default App;
