@@ -1,14 +1,10 @@
 import React, { useState} from 'react';
 import RenderHTML from 'react-native-render-html';
 import { ColorSchemeName, useWindowDimensions } from 'react-native';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  useColorScheme,
-} from 'react-native';
+import {SafeAreaView,ScrollView,StyleSheet,useColorScheme} from 'react-native';
 import TestComponent from './components/Test';
-import LoginComponent from './components/LoginComponent'
+// import LoginComponent from './components/LoginComponent'
+import LoginComponent from './screens/StartScreen';
 import UserModule , {User} from "./ts/userModule"
 
 type AppStateI={
